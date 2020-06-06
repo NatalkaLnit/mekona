@@ -1,9 +1,13 @@
 from django.db import models
+from django.shortcuts import reverse
 from django.contrib.auth.models import User
 
 class Type_of_work(models.Model):
     name_of_type = models.CharField(max_length = 200, 
                                     verbose_name = 'Виды работ')
+    class Meta:
+        verbose_name = 'Вид работы'
+        verbose_name_plural = 'Виды работ'
 
     def __str__(self):
         return self.name_of_type
@@ -31,12 +35,24 @@ class Order(models.Model):
     
     def __str__(self):
         return '{}, {}'.format(self.order_author, self.order_date_creation)
+    
+    def get_absolute_url(self):
+        return reverse("order_detail_url", kwargs={"order_id": self.pk})
+    
+    def get_update_url(self):
+        return reverse("order_update_url", kwargs={"obj_id": self.pk})
+
+    def get_delete_url(self):
+        return reverse("order_delete_url", kwargs={"obj_id": self.pk})
 
 class Order_Type(models.Model):
     type_fk = models.ForeignKey(Type_of_work, on_delete=models.CASCADE)
     order_fk = models.ForeignKey(Order, on_delete=models.CASCADE)
     count = models.FloatField(verbose_name = 'Стоимость')
 
+    class Meta:
+        verbose_name = 'Вид работ в заказе'
+        verbose_name_plural = 'Виды работ в заказе'
 
 class Task(models.Model):
     type_fk = models.ForeignKey(Type_of_work, verbose_name = 'Тип работ',
@@ -69,12 +85,7 @@ class Task(models.Model):
     class Meta:
         verbose_name = 'Задача'
         verbose_name_plural = 'Задача'
+        
 
     def __str__(self):
         return 'Отвественный: {}, Исполнитель: {}'.format(self.task_author, self.task_executor)
-
-                    
-
-
-   
-    

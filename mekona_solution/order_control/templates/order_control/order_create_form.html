@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="{% url 'order_create_url' %}" method = "POST">
+{% csrf_token %}
+    {% for field in form %}
+    {% if field.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{field.errors}}
+        </div>
+    {% endif %}
+    {{ field.label}}
+    {{ field}}
+    {% endfor %}
+    <button class="btn btn-primary" type="submit">Добавить</button>
+</form>
+
+{% endblock content %}

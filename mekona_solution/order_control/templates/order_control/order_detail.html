@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mt-5 mb-5 justify-content-center">
+    <h3>Заказ №{{order.id}}</h3>
+</div>
+<form>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputEmail4">Заказчик</label>
+            <label class="form-control" id="inputEmail4">{{order.order_author.first_name}}
+                {{order.order_author.last_name}}</label>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Дата заказа</label>
+            <label class="form-control" id="inputPassword4">{{order.order_date_creation}}</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAddress">Текст заказа</label>
+        <textarea class="form-control" id="inputAddress">{{order.order_text}}</textarea>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress2">Виды работ</label>
+
+            <ul class="list-group" id="inputAddress2">
+                {% if order.type_of_work_fk.all %}
+                {% for type in order.type_of_work_fk.all %}
+                <li class="list-group-item">{{type.name_of_type}} </li>
+                {% endfor %}
+                {% else %}
+                <li class="list-group-item">Не выбран ни один вид работ! </li>
+                {% endif %}
+            </ul>
+
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputCity">Номер обратной связи</label>
+            <label class="form-control" id="inputCity">{{order.client_number}}</label>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputZip">Дата окончания</label>
+            <label class="form-control" id="inputZip">{{order.deadline}}</label>
+        </div>
+    </div>
+
+</form>
+
+{% endblock content%}
