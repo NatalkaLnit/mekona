@@ -40,7 +40,7 @@ class ObjUpdateMixin:
 class ObjDeleteMixin:
     data = None
     template = None
-
+    reverse_url = None
     def get(self, request, obj_id):
         data_obj = self.data.objects.get(pk=obj_id)
         return render(request, self.template, context={'obj': data_obj})
@@ -48,4 +48,4 @@ class ObjDeleteMixin:
     def post(self, request, obj_id):
         data_obj = self.data.objects.get(pk=obj_id)
         data_obj.delete()
-        return redirect(reverse('url_index'))
+        return redirect(reverse(self.reverse_url))

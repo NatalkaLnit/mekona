@@ -1,19 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="row justify-content-center">
+    <div class="col-7">
 
-<form action="{% url 'order_create_url' %}" method = "POST">
-{% csrf_token %}
-    {% for field in form %}
-    {% if field.errors %}
-        <div class="alert alert-danger" role="alert">
-            {{field.errors}}
-        </div>
-    {% endif %}
-    {{ field.label}}
-    {{ field}}
-    {% endfor %}
-    <button class="btn btn-primary" type="submit">Добавить</button>
-</form>
+
+        <form action="{% url 'order_create_url' %}" method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+
+            {% if field.errors %}
+            <div class="alert alert-danger" role="alert">
+                {{field.errors}}
+            </div>
+            {% endif %}
+            {% if field.is_hidden %}
+            {# Don't render label #}
+            {% else %}
+            {{ field.label}}
+            {% endif %}
+            {{ field}}
+
+            {% endfor %}
+            <button class="btn btn-primary" type="submit">Добавить</button>
+        </form>
+    </div>
+</div>
+<!-- Fengyuan Chen's Datepicker -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css"
+    integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"
+    integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+
+<script>
+    $(function () {
+        $("#id_deadline").datepicker({
+            format: 'dd.mm.yyyy',
+        });
+    });
+</script>
+
+
 
 {% endblock content %}

@@ -48,7 +48,7 @@ class Order(models.Model):
 class Order_Type(models.Model):
     type_fk = models.ForeignKey(Type_of_work, on_delete=models.CASCADE)
     order_fk = models.ForeignKey(Order, on_delete=models.CASCADE)
-    count = models.FloatField(verbose_name = 'Стоимость')
+    count = models.FloatField(verbose_name = 'Стоимость', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Вид работ в заказе'
@@ -89,3 +89,12 @@ class Task(models.Model):
 
     def __str__(self):
         return 'Отвественный: {}, Исполнитель: {}'.format(self.task_author, self.task_executor)
+
+    def get_absolute_url(self):
+        return reverse("task_detail_url", kwargs={"task_id": self.pk})
+    
+    def get_update_url(self):
+        return reverse("task_update_url", kwargs={"obj_id": self.pk})
+
+    def get_delete_url(self):
+        return reverse("task_delete_url", kwargs={"obj_id": self.pk})
