@@ -12,6 +12,20 @@ class Type_of_work(models.Model):
     def __str__(self):
         return self.name_of_type
 
+class Profile(models.Model):
+    # CASCADE means if the user is deleted the profile is deleted
+    # However, If the profile is deleted, the user is not deleted.
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+    def get_absolute_url(self):
+        return reverse("profile_detail", kwargs={"user_id": self.user.pk})
+    
+    def get_update_url(self):
+        return reverse("profile_update_url", kwargs={"user_id": self.user.pk})
+
 
 class Order(models.Model):
     order_author = models.ForeignKey(User, on_delete=models.CASCADE,

@@ -2,38 +2,69 @@
 
 
 {% block content %}
+{% if task_list %}
 <div class="row justify-content-center">
-    <h2>Задачи</h2>
-    
-</div>
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Автор</th>
-        <th scope="col">Тип работ</th>
-        <th scope="col">Дата создания</th>
-        <th scope="col">Текст</th>
-        <th scope="col">Дата окончания</th>
-        <th scope="col">Исполнитель</th>
-        <th scope="col">Статус</th>
+
+<h2>Задачи</h2>
+<table class="table mt-5">
+<thead>
+  <tr>
+    <th scope="col">#</th>
+    <th scope="col">Автор</th>
+    <th scope="col">Тип работ</th>
+    <th scope="col">Дата создания</th>
+    <th scope="col">Текст</th>
+    <th scope="col">Дата окончания</th>
+    <th scope="col">Исполнитель</th>
+    <th scope="col">Статус</th>
+  </tr>
+</thead> 
+<tbody>
+    {% for task in task_list %}
+    <tr>
+        <th scope="row">{{task.id}}</th>
+        <td>
+          {% if task.task_author.first_name %}
+            {{task.task_author.first_name}} {{task.task_author.last_name}}
+            {% else %}
+            {{task.task_author}}
+            {% endif %}
+
+        </td>
+        <td>{{task.type_fk}}</td>
+        <td>{{task.task_date_creation}}</td>
+        <td>{{task.task_text|truncatewords:4}}</td>
+        <td>
+            
+            {% if task.task_date_comleate %}
+            {{task.task_date_comleate}}
+            {% else %}
+            Задача в процессе выполнения
+            {% endif %}
+                
+        </td>
+        <td>
+            
+            {% if task.task_executor.first_name %}
+            {{task.task_executor.first_name}} {{task.task_executor.last_name}}
+            {% else %}
+            {{task.task_executor}}
+            {% endif %}
+                
+        </td>
+        <td>{{task.get_status_display}}</td>
+        <th scope="col"><a class="btn btn-info" href="{{ task.get_absolute_url }}">Открыть</a></th>
       </tr>
-    </thead> 
-    <tbody>
-        {% for task in task_list %}
-        <tr>
-            <th scope="row">{{task.id}}</th>
-            <td>{{task.task_author}}</td>
-            <td>{{task.type_fk}}</td>
-            <td>{{task.task_date_creation}}</td>
-            <td>{{task.task_text|truncatewords:4}}</td>
-            <td>{{task.task_date_comleate}}</td>
-            <td>{{task.task_executor}}</td>
-            <td>{{task.get_status_display}}</td>
-            <th scope="col"><a class="btn btn-info" href="{{ task.get_absolute_url }}">Открыть</a></th>
-          </tr>
-        {% endfor %}
-    </tbody>
-  </table>
+    {% endfor %}
+</tbody>
+</table>
+</div>
+{% else %}
+<div class="row justify-content-center">
+  <h3>Нет ни одной активной задачи</h3>
+  
+</div>
+{% endif %}
+
 
 {% endblock content %}

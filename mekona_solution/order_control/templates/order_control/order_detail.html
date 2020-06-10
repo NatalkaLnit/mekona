@@ -48,4 +48,75 @@
 
 </form>
 
+
+{% if order.task_set.all %}
+<div class="row justify-content-center">
+    
+    <h3>Здесь вы можете отследить работы по вашему заказу.</h3>
+    
+</div>
+<table class="table mt-5">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Автор</th>
+            <th scope="col">Тип работ</th>
+            <th scope="col">Дата создания</th>
+            <th scope="col">Текст</th>
+            <th scope="col">Дата окончания</th>
+            <th scope="col">Исполнитель</th>
+            <th scope="col">Статус</th>
+        </tr>
+    </thead> 
+    <tbody>
+        {% for task in order.task_set.all %}
+        
+        <tr>
+            <th scope="row">{{task.id}}</th>
+            <td>
+                {% if task.task_author.first_name %}
+                {{task.task_author.first_name}} {{task.task_author.last_name}}
+                {% else %}
+                {{task.task_author}}
+                {% endif %}
+                
+
+            </td>
+            <td>{{task.type_fk}}</td>
+            <td>{{task.task_date_creation}}</td>
+            <td>{{task.task_text|truncatewords:4}}</td>
+            <td>
+                
+                {% if task.task_date_comleate %}
+                {{task.task_date_comleate}}
+                {% else %}
+                Задача в процессе выполнения
+                {% endif %}
+                    
+            </td>
+            <td>
+                
+                {% if task.task_executor.first_name %}
+                {{task.task_executor.first_name}} {{task.task_executor.last_name}}
+                {% else %}
+                {{task.task_executor}}
+                {% endif %}
+                    
+            </td>
+            <td>{{task.get_status_display}}</td>
+            
+          </tr>
+        {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+<div class="row justify-content-center mt-5">
+    
+    
+    <h3>Ваш заказ в обработке</h3>
+    
+</div>
+{% endif %}
+    
 {% endblock content%}

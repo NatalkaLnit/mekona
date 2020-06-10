@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import View, ListView
 from .utils import ObjUpdateMixin, ObjCreateMixin, ObjDeleteMixin
-from .models import Order, Task
-from .forms import OrderForm, TaskForm
+from .models import Order, Task, Profile
+from django.contrib.auth.models import User
+from .forms import OrderForm, TaskForm, UserUpdateForm
 from django.shortcuts import render, redirect, reverse
 from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -97,3 +98,52 @@ def task_detail(request, task_id):
     except Task.DoesNotExist:
         raise Http404('Заказа не существует!')
     return render(request, 'order_control/task_detail.html', context)
+
+class ClientOrderListView(LoginRequiredMixin, ListView):
+    model = Order
+    template_name = 'order_control/orders_list.html'
+
+    def get_queryset(self):
+        return Order.objects.filter(order_author = self.request.user).order_by('order_date_creation')
+
+class WorkerTaskListView(LoginRequiredMixin, ListView):
+    model = Task
+    template_name = 'order_control/task_list.html'
+
+    def get_queryset(self):
+        task_list = Task.objects.filter(task_executor = self.request.user).exclude(status = 'C').order_by('task_date_creation')
+        return task_list
+
+class AdminTaskListView(LoginRequiredMixin, ListView):
+    model = Task
+    template_name = 'order_control/task_list.html'
+
+    def get_queryset(self):
+        task_list = Task.objects.filter(task_author = self.request.user).exclude(status = 'C').order_by('task_date_creation')
+        return task_list
+        
+
+class UserUpdateView( LoginRequiredMixin,View, ObjUpdateMixin):
+    model_form = UserUpdateForm
+    data = User
+    raise_exeption = True
+    template = 'order_control/user_account.html'
+    
+
+    def get(self, request):
+        data_obj = self.data.objects.get(username=self.request.user.username)
+        bound_form = self.model_form(instance=data_obj)
+        return render(request, self.template, context={'form': bound_form, 'obj': data_obj})
+    
+    def post(self, request):
+        data_obj = self.data.objects.get(username=self.request.user.username)
+        bound_form = self.model_form(request.POST, instance=data_obj)
+
+        if bound_form.is_valid():
+            new_obj = bound_form.save()
+            return redirect('profile_detail_url')
+        return render(request, self.template, context={'form': bound_form, 'obj': data_obj})
+
+def profile(request):
+    data_obj = User.objects.get(pk=request.user.id)
+    return render(request, template_name='order_control/user_account.html', )

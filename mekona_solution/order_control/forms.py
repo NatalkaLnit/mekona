@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from django.contrib.auth.models import User
 
 
 
@@ -30,4 +31,15 @@ class TaskForm(forms.ModelForm):
             'task_author': forms.HiddenInput(attrs={'class':'form-control'}),
             'status': forms.Select(attrs={'class':'form-control'}),
             'task_text': forms.Textarea(attrs={'class':'form-control'}),
+        }
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'first_name', 'last_name']
+        widgets = {
+            'email' : forms.TextInput(attrs={'class':'form-control'}),
+            'username': forms.TextInput(attrs={'class':'form-control', 'readonly':''}),
+            'first_name': forms.TextInput(attrs={'class':'form-control'}),
+            'last_name': forms.TextInput(attrs={'class':'form-control'}),
         }

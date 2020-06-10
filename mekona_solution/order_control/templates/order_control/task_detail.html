@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mt-5 mb-5 justify-content-center">
+    <h3>Задача №{{task.id}}</h3>
+</div>
+<form>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputEmail4">Ответсвенный</label>
+            <label class="form-control" id="inputEmail4">{{task.task_author.first_name}}
+                {{task.task_author.last_name}}</label>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Дата создания задачи</label>
+            <label class="form-control" id="inputPassword4">{{task.task_date_creation}}</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAddress">Текст задачи</label>
+        <textarea class="form-control" id="inputAddress">{{task.task_text}}</textarea>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputAddress2">Вид работ</label>
+
+            <ul class="list-group" id="inputAddress2">
+                
+                <li class="list-group-item">{{task.type_fk }} </li>
+            </ul>
+
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputCity">Исполнитель</label>
+            <label class="form-control" id="inputCity">
+                {% if task.task_executor.first_name %}
+                {{task.task_executor.first_name}} {{task.task_executor.last_name}}
+                {% else %}
+                {{task.task_executor}}
+                {% endif %}
+            </label>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputZip">Дата окончания</label>
+            <label class="form-control"  id="inputZip">
+                
+                {% if task.task_date_comleate %}
+                    
+                {{task.task_date_comleate}}
+                {% else %}
+                Заказ в процессе выполнения
+                {% endif %}
+                    
+            </label>
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputStatus">Статус задачи</label>
+            <label class="form-control" id="inputStatus">{{task.get_status_display}}</label>
+        </div>
+    </div>
+
+</form>
+
+{% endblock content%}

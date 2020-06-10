@@ -6,32 +6,43 @@
     <h2>Заявки</h2>
     
 </div>
+
+{% if order_list %}
 <table class="table">
-    <thead>
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Автор</th>
+      <th scope="col">Дата создания</th>
+      <th scope="col">Текст</th>
+      <th scope="col">Номер клиента</th>
+      <th scope="col">Дата окончания</th>
+      <th scope="col"></th>
+    </tr>
+  </thead> 
+  <tbody>
+      {% for order in order_list %}
       <tr>
-        <th scope="col">#</th>
-        <th scope="col">Автор</th>
-        <th scope="col">Дата создания</th>
-        <th scope="col">Текст</th>
-        <th scope="col">Номер клиента</th>
-        <th scope="col">Дата окончания</th>
-        <th scope="col"></th>
-      </tr>
-    </thead> 
-    <tbody>
-        {% for order in order_list %}
-        <tr>
-            <th scope="row">{{order.id}}</th>
-            <td>{{order.order_author.first_name}} {{order.order_author.last_name}}</td>
-            <td>{{order.order_date_creation}}</td>
-            <td>{{order.order_text|truncatewords:4}}</td>
-            <td>{{order.client_number}}</td>
-            <td>{{order.deadline}}</td>
-            <th scope="col"><a class="btn btn-info" href="{{ order.get_absolute_url }}">Открыть</a></th>
-          </tr>
-        {% endfor %}
-    </tbody>
-  </table>
+          <th scope="row">{{order.id}}</th>
+          <td>{{order.order_author.first_name}} {{order.order_author.last_name}}</td>
+          <td>{{order.order_date_creation}}</td>
+          <td>{{order.order_text|truncatewords:4}}</td>
+          <td>{{order.client_number}}</td>
+          <td>{{order.deadline}}</td>
+          <th scope="col"><a class="btn btn-info" href="{{ order.get_absolute_url }}">Открыть</a></th>
+        </tr>
+      {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+<div class="row justify-content-center mt-5">
+  <h4>Нет ни одной заявки.</h4>
+  
+</div>
+{% endif %}
+  
+
 
 {% endblock content %}
     

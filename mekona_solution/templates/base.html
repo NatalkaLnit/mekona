@@ -14,8 +14,10 @@
 		crossorigin="anonymous"></script>
 	<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"
 		integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk=" crossorigin="anonymous"></script>
+	{% block extrahead %}
 
-
+		<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+	{% endblock %}
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -52,20 +54,24 @@
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-							<a class="dropdown-item" href="{% url 'order_create_url' %}">Подать заявку</a>
+							
+							{% if request.user.is_superuser %}
+							<a class="dropdown-item" href="{% url 'task_create_url' %}">Создать задачу</a>
+							<div class="dropdown-divider"></div>
+								
+							{% endif %}
+								
 							{% if request.user.is_staff %}
 							<a class="dropdown-item" href="{% url 'task_list_url' %}">Список задач</a>
-
-							<a class="dropdown-item" href="{% url 'order_list_url' %}">Список заявок</a>
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="{% url 'task_create_url' %}">Создать задачу</a>
-
-							{% if panel %}
-							<a class="dropdown-item" href="{{ panel.get_update_url }}"
-							style="{% if detail %} display: block;{% else %} display: none;  {% endif %}">Изменить</a>
-						<a class="dropdown-item" href="{{ panel.get_delete_url }}"
-							style="{% if detail %} display: block;{% else %} display: none; {% endif %}">Удалить</a>
+								<a class="dropdown-item" href="{% url 'order_list_url' %}">Список заявок</a>
+								{% else %}
+								<a class="dropdown-item" href="{% url 'order_create_url' %}">Подать заявку</a>
 							{% endif %}
+							{% if panel and request.user.is_staff %}
+							<a class="dropdown-item" href="{{ panel.get_update_url }}"
+								style="{% if detail %} display: block;{% else %} display: none;  {% endif %}">Изменить</a>
+							<a class="dropdown-item" href="{{ panel.get_delete_url }}"
+								style="{% if detail %} display: block;{% else %} display: none; {% endif %}">Удалить</a>
 							{% endif %}
 						</div>
 					</li>
@@ -73,10 +79,26 @@
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							{{ user.get_username }}
+							
+							{% if request.user.first_name %}
+								{{request.user.first_name}} {{request.user.last_name}}
+							{% else %}
+								{{ user.get_username }}
+							{% endif %}
+
+								
+							
 						</a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="">Мои статьи</a>
+							<a class="dropdown-item" href="{% url 'profile_detail_url' %}">Личный кабинет</a>
+							{% if request.user.is_superuser %}
+							<a class="dropdown-item" href="{% url 'admin_tasks_url' %}">Список задач</a>
+							{% elif request.user.is_staff %}
+							<a class="dropdown-item" href="{% url 'worker_tasks_url' %}">Мои задачи</a>
+							{% else %}
+							<a class="dropdown-item" href="{% url 'user_orders_detail_url' %}">Мои заказы</a>
+							{% endif %}
+								
 							<a class="dropdown-item" href="{% url 'logout' %}?next={{request.path}}">Выход</a>
 						</div>
 					</li>
