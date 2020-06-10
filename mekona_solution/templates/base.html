@@ -72,7 +72,16 @@
 								style="{% if detail %} display: block;{% else %} display: none;  {% endif %}">Изменить</a>
 							<a class="dropdown-item" href="{{ panel.get_delete_url }}"
 								style="{% if detail %} display: block;{% else %} display: none; {% endif %}">Удалить</a>
+							
 							{% endif %}
+							
+							{% if panel %}
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" 
+							style="{% if detail %} display: block;{% else %} display: none; {% endif %}">Скачать заказ</a>
+							<!-- href="{% url 'order_pdf_url' order_id=order.id  %}" -->
+							{% endif %}
+								
 						</div>
 					</li>
 

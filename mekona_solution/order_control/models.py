@@ -1,6 +1,8 @@
 from django.db import models
 from django.shortcuts import reverse
 from django.contrib.auth.models import User
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class Type_of_work(models.Model):
     name_of_type = models.CharField(max_length = 200, 
@@ -38,8 +40,7 @@ class Order(models.Model):
                                     blank=True, null=True)
     type_of_work_fk = models.ManyToManyField(Type_of_work, through = 'Order_Type', 
                                     verbose_name = 'Виды работ')
-    client_number = models.CharField(max_length = 17, 
-                                    verbose_name = 'Номер обратной связи') #  +7(222)-222-23-23
+    client_number = PhoneNumberField(verbose_name = 'Номер обратной связи') #  +7(222)-222-23-23
     deadline = models.DateField(blank=True, null=True, 
                                     verbose_name= 'Дата окончания')
                     
@@ -48,7 +49,7 @@ class Order(models.Model):
         verbose_name_plural = 'Заказы'
     
     def __str__(self):
-        return '{}, {}'.format(self.order_author, self.order_date_creation)
+        return '{} {} | {}'.format(self.order_author.first_name, self.order_author.last_name,  self.order_date_creation)
     
     def get_absolute_url(self):
         return reverse("order_detail_url", kwargs={"order_id": self.pk})
@@ -112,3 +113,10 @@ class Task(models.Model):
 
     def get_delete_url(self):
         return reverse("task_delete_url", kwargs={"obj_id": self.pk})
+
+from django.contrib.auth.models import User
+
+def get_user_name(self):
+    return '{} {} | {}'.format(self.first_name, self.last_name, self.username)
+
+User.add_to_class("__str__", get_user_name)

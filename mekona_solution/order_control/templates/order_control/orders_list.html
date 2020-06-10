@@ -24,11 +24,23 @@
       {% for order in order_list %}
       <tr>
           <th scope="row">{{order.id}}</th>
-          <td>{{order.order_author.first_name}} {{order.order_author.last_name}}</td>
+          <td>
+            {% if task.task_author.first_name %}
+                {{task.task_author.first_name}} {{task.task_author.last_name}}
+                {% else %}
+                {{task.task_author}}
+                {% endif %}
+          </td>
           <td>{{order.order_date_creation}}</td>
           <td>{{order.order_text|truncatewords:4}}</td>
           <td>{{order.client_number}}</td>
-          <td>{{order.deadline}}</td>
+          <td>{% if order.deadline %}
+            {{order.deadline}}
+            {% else %}
+            Дата окончания не выбрана
+          {% endif %}
+
+          </td>
           <th scope="col"><a class="btn btn-info" href="{{ order.get_absolute_url }}">Открыть</a></th>
         </tr>
       {% endfor %}

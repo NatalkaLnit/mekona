@@ -10,6 +10,8 @@ urlpatterns = [
     path('order_create/', views.OrderCreate.as_view(), name = 'order_create_url'),
     path('order/<int:obj_id>/order_update/', views.OrderUpdate.as_view(), name="order_update_url"),
     path('order/<int:obj_id>/order_delete/', views.OrderDelete.as_view(), name="order_delete_url"),
+    #path('order/<int:order_id>/order_pdf/', views.html_to_pdf_view, name="order_pdf_url"),
+    
     
     path('task_list/', views.TaskList.as_view(), name = 'task_list_url'),
     path('task/<int:task_id>', views.task_detail, name="task_detail_url"),

@@ -8,6 +8,11 @@ from django.shortcuts import render, redirect, reverse
 from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
+from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+
+from weasyprint import HTML
 
 # Create your views here.
 def mainpage(request):
@@ -147,3 +152,22 @@ class UserUpdateView( LoginRequiredMixin,View, ObjUpdateMixin):
 def profile(request):
     data_obj = User.objects.get(pk=request.user.id)
     return render(request, template_name='order_control/user_account.html', )
+
+# def html_to_pdf_view(request, order_id):
+#     try:
+#         order = Order.objects.get(pk=order_id)
+#         context = {'order': order}
+#     except Order.DoesNotExist:
+#         raise Http404('Заказа не существует!')
+#     html_string = render_to_string('order_control/pdf_template.html', context)
+
+#     html = HTML(string=html_string)
+#     html.write_pdf(target='/tmp/mypdf.pdf');
+
+#     fs = FileSystemStorage('/tmp')
+#     with fs.open('mypdf.pdf') as pdf:
+#         response = HttpResponse(pdf, content_type='application/pdf')
+#         response['Content-Disposition'] = 'attachment; filename="mypdf.pdf"'
+#         return response
+
+#     return response

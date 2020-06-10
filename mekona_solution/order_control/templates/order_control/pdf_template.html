@@ -1,0 +1,140 @@
+<html>
+<head>
+  <title>Test</title>
+  <style>
+    body {
+      background-color: #f7f7f7;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+		integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+		integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+		crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="row mt-5 mb-5 justify-content-center">
+        <h3>Заказ №{{order.id}}</h3>
+    </div>
+    <form>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputEmail4">Заказчик</label>
+                <label class="form-control" id="inputEmail4">{{order.order_author.first_name}}
+                    {{order.order_author.last_name}}</label>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputPassword4">Дата заказа</label>
+                <label class="form-control" id="inputPassword4">{{order.order_date_creation}}</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputAddress">Текст заказа</label>
+            <textarea class="form-control" id="inputAddress">{{order.order_text}}</textarea>
+        </div>
+    
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="inputAddress2">Виды работ</label>
+    
+                <ul class="list-group" id="inputAddress2">
+                    {% if order.type_of_work_fk.all %}
+                    {% for type in order.type_of_work_fk.all %}
+                    <li class="list-group-item">{{type.name_of_type}} </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="list-group-item">Не выбран ни один вид работ! </li>
+                    {% endif %}
+                </ul>
+    
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputCity">Номер обратной связи</label>
+                <label class="form-control" id="inputCity">{{order.client_number}}</label>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="inputZip">Дата окончания</label>
+                <label class="form-control" id="inputZip">{{order.deadline}}</label>
+            </div>
+        </div>
+    
+    </form>
+    
+    
+    {% if order.task_set.all %}
+    <div class="row justify-content-center">
+        
+        <h3>Здесь вы можете отследить работы по вашему заказу.</h3>
+        
+    </div>
+    <table class="table mt-5">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Автор</th>
+                <th scope="col">Тип работ</th>
+                <th scope="col">Дата создания</th>
+                <th scope="col">Текст</th>
+                <th scope="col">Дата окончания</th>
+                <th scope="col">Исполнитель</th>
+                <th scope="col">Статус</th>
+            </tr>
+        </thead> 
+        <tbody>
+            {% for task in order.task_set.all %}
+            
+            <tr>
+                <th scope="row">{{task.id}}</th>
+                <td>
+                    {% if task.task_author.first_name %}
+                    {{task.task_author.first_name}} {{task.task_author.last_name}}
+                    {% else %}
+                    {{task.task_author}}
+                    {% endif %}
+                    
+    
+                </td>
+                <td>{{task.type_fk}}</td>
+                <td>{{task.task_date_creation}}</td>
+                <td>{{task.task_text|truncatewords:4}}</td>
+                <td>
+                    
+                    {% if task.task_date_comleate %}
+                    {{task.task_date_comleate}}
+                    {% else %}
+                    Задача в процессе выполнения
+                    {% endif %}
+                        
+                </td>
+                <td>
+                    
+                    {% if task.task_executor.first_name %}
+                    {{task.task_executor.first_name}} {{task.task_executor.last_name}}
+                    {% else %}
+                    {{task.task_executor}}
+                    {% endif %}
+                        
+                </td>
+                <td>{{task.get_status_display}}</td>
+                
+              </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    
+    {% else %}
+    <div class="row justify-content-center mt-5">
+        
+        
+        <h3>Ваш заказ в обработке</h3>
+        
+    </div>
+    {% endif %}
+        
+</body>
+</html>

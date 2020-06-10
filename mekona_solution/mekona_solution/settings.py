@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'order_control',
     'crispy_forms',
+    'phonenumber_field',
+    'weasyprint',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -133,5 +135,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = '/'
 
+PHONENUMBER_DEFAULT_REGION = 'RU'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -21,13 +21,15 @@ class OrderForm(forms.ModelForm):
 
 
 class TaskForm(forms.ModelForm):
+    task_executor = forms.ModelChoiceField(queryset=User.objects.all().exclude(is_staff = False), widget=forms.Select(attrs={'class':'form-control'}), label='Исполнитель')
+    cost = forms.FloatField()
     class Meta:
         model = Task
-        fields = ('type_fk', 'order_fk',  'task_executor', 'status','task_author', 'task_text' )
+        fields = ('order_fk', 'type_fk',   'task_executor', 'status','task_author', 'task_text' )
         widgets = {
             'type_fk': forms.Select(attrs={'class':'form-control'}),
             'order_fk': forms.Select(attrs={'class':'form-control'}),
-            'task_executor': forms.Select(attrs={'class':'form-control'}),
+            
             'task_author': forms.HiddenInput(attrs={'class':'form-control'}),
             'status': forms.Select(attrs={'class':'form-control'}),
             'task_text': forms.Textarea(attrs={'class':'form-control'}),
